@@ -1,2 +1,8 @@
 #!/bin/bash
-echo "$(jq -r '.name as $n | .height as $h | .weight as $w | .types[0].type.name as $t | "\($n|ascii_upcase) is of type \($t|ascii_upcase), weighs \($w/10)kg, and is \($h/10)m tall."' data.json)"
+
+name=$(jq -r '.name' data.json | sed 's/.*/\u&/')
+height=$(jq -r '.height' data.json | awk '{printf "%.1f", $1 / 10}')
+weight=$(jq -r '.weight' data.json | awk '{printf "%.0f", $1 / 10}')
+type=$(jq -r '.types[0].type.name' data.json | sed 's/.*/\u&/')
+
+echo "$name is of type $type, weighs ${weight}kg, and is ${height}m tall."
