@@ -1,0 +1,20 @@
+#!/bin/bash
+
+mkdir -p pokemon_data
+POKEMON_LIST=(bulbasaur ivysaur venusaur charmander charmeleon)
+
+for name in "${POKEMON_LIST[@]}"; do
+  (
+    echo "Fetching $name..."
+    if curl -s "https://pokeapi.co/api/v2/pokemon/$name" -o "pokemon_data/$name.json"; then
+      echo "$name saved."
+    else
+      echo "$name failed." >> errors.txt
+    fi
+  ) &
+done
+
+# Wait for all background tasks to finish
+wait
+
+echo -e "\nAll downloads completed!"

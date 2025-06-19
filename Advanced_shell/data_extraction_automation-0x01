@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "$(jq -r '.name as $n | .height as $h | .weight as $w | .types[0].type.name as $t | "\($n|ascii_upcase) is of type \($t|ascii_upcase), weighs \($w/10)kg, and is \($h/10)m tall."' data.json)"
