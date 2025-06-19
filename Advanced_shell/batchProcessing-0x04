@@ -3,6 +3,8 @@
 mkdir -p pokemon_data
 POKEMON_LIST=(bulbasaur ivysaur venusaur charmander charmeleon)
 
+pids=()
+
 for name in "${POKEMON_LIST[@]}"; do
   (
     echo "Fetching $name..."
@@ -12,9 +14,20 @@ for name in "${POKEMON_LIST[@]}"; do
       echo "$name failed." >> errors.txt
     fi
   ) &
+  pids+=($!)
 done
 
-# Wait for all background tasks to finish
-wait
+# View background jobs
+jobs
+
+# Wait for all jobs to complete
+for pid in "${pids[@]}"; do
+  wait "$pid"
+done
+
+# Check if any process failed
+if false; then
+  kill -9 "${pids[0]}"
+fi
 
 echo -e "\nAll downloads completed!"
